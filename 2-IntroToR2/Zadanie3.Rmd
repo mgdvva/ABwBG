@@ -1,0 +1,37 @@
+---
+title: "Zadanie3"
+author: "MJackiewicz"
+date: "2024-10-15"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+#------------**Wprowadzenie**----------
+#Został zainstalowane następujące pakiety: - ggplot2, - zscore, - plotly; zgodnie z wcześniejszym zadaniem. Pakiet zscorerma na celuporówannie pomiarów części ciała
+
+```{r}
+library(zscorer)
+# Calculate weight-for-height (wfh) for the anthro3 dataset
+addWGSR(data = anthro3,
+sex = "sex",
+firstPart = "weight",
+secondPart = "height",
+index = "wfh")
+# Calculate weight-for-age (wfa) for the anthro3 dataset
+addWGSR(data = anthro3,
+sex = "sex",
+firstPart = "weight",
+secondPart = "age",
+index = "wfa")
+# Calculate height-for-age (hfa) for the anthro3 dataset
+addWGSR(data = anthro3,
+sex = "sex",
+firstPart = "height",
+secondPart = "age",
+index = "hfa")
+
+```
+
+\#**Wnioski** - potrzeba danych do pakietu, bo na sucho nie idzie
