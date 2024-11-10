@@ -1,0 +1,15 @@
+---
+title: "Zadanie4"
+output: html_document
+date: "2024-11-10"
+---
+**Zadanie 3:**
+Liczba odczytów - 2090228
+
+**Zadanie 4:**
+  Czy jakość baz spada na końcach odczytów? - Tak, jakość spada na końcach odczytów
+  Czy odczyty mają jednolitą długość? - Nie, nie wszystkie odczyty mają jednolitą długość
+  Czy występują biasy sekwencyjne? - Nie występują
+  Czy obecne są sekwencje adapterów? - Nie ma
+  
+**Raport**: Sekwencja ma większą ilość par GC w sekwencj, co świadczy o tym, że nić jest bardziej stabilna. Z większą ilością odczytów, odczytanie sekwencji miało wyższą jakość. Nie wykazano nieprawidłowości w tym sekwencji adapetrów.
