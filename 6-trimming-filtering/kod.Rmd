@@ -1,0 +1,38 @@
+---
+title: "Zadanie 6"
+output: html_document
+date: "2024-11-12"
+---
+**Zadanie 1:**
+% odczytu nr 1 - ok 92%; 
+% odczytu nr 2 - ok 85%
+
+Użyty kod `trimmed_reads1 <- trimTailw(fq_reads1, k = 2, a = "B", halfwidth = 1); length(fq_reads1)
+length(trimmed_reads1); sum(width(trimmed_reads1) < width(fq_reads1))`
+
+**Zadanie 2:** 
+ Odczyty forward: po przycięciu - 284123; po filtracji - 248565
+ Odczyty reverse: po przycięciu - 273668; po filtracji - 223516.
+
+% odczytów forward - 87%
+% odczytów reverse - 82%
+
+Użyty kod `filtered_reads1 <- trimmed_reads1[width(trimmed_reads1) >= 50]`<- filtrowanie odczytów
+
+**Zadanie 3:**
+W przypadku odczytów reverse, z adapetrami odczyt wynosił 309440, a bez 223516. W obu przypadkach było więcej par GC. Na wykresach ogólnej jakości odczytu, w przykładzie sekwencji z adapetrami są 2 piki, które świadczą o ich obecności. W sekwencji bez adapetrów, widać, że sekwencja jest dobrej jakości.  
+
+Użyty kod `qa_results1 <- qa("/Volumes/flashdrive/ecoli_simulated1_with_adapters.fq", type = "fastq")   
+qa_results1_processed <- qa( "/Volumes/flashdrive/ecoli_simulated1_processed.fq", type = "fastq")
+report(qa_results1, dest = "/Volumes/flashdrive/QA_report_read1")
+report(qa_results1_processed, dest = "/Volumes/flashdrive/QA_report_read1_processed")`<- ciąg komend do wytworzenia raportu w Bioconductor
+
+**Zadanie 4:**
+Długość odczytów forward po przycięciu są o wiele krótsze niż przed przycięciem, a częstość jest większa (częstość po przycięciu jest zapisana w notacji wykładniczej)
+
+Długość odczytów reverse po przycięciu są o wiele krótsze niż przed przycięciem, a częstość jest mniejsza
+
+Użyty kod `hist(width(fq_reads1), breaks = 50, main = "Długość odczytów forward przed przycinaniem", xlab = "Długość (bp)"); hist(width(filtered_reads1), breaks = 50, main = "Długość odczytów forward po przycinaniu", xlab = "Długość (bp)")`<- porównanie histogramów przed i po przycięciu sekwencji
+
+**Zadanie 5:**
+W odczycie forward zostało zmodyfikowane 120191 zasad, a w odczycie reverse 110400 zasad
