@@ -1,0 +1,37 @@
+---
+title: "Zadanie 7"
+output: html_document
+date: "2024-11-21"
+---
+
+**Zadanie 1:** Kod: `fq1 <- readFastq("C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/SRR31294336.fastq.gz")` \<- zaimportowanie pliku; `qa_result <- qa(fq1)` `report(qa_result, dest="ścieżka/do/QA_Report")`\<- analiza jakości odczytu
+
+**Zadanie 2 i 3:** Kod: `ref_genome <- readDNAStringSet("C:/Users/Magda/Downloads/ecoli_genome.fna.gz")` `buildindex(basename = "ecoli_index", reference = "C:/Users/Magda/Downloads/ecoli_genome.fna.gz")`
+
+Wykorzystane biblioteki: `library(Biostrings)`, `library(Rsubread)`
+
+Utworzone pliki w lokalizacji C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit: \# ecoli_index.00.b.array \# ecoli_index.00.b.tab \# ecoli_index.files \# ecoli_index.log \# ecoli_index.lowinf \# ecoli_index.reads
+
+**Zadanie 4:** Kod: `align(index = "ecoli_index",       readfile1 = "C:/Users/Magda/Downloads/SRR31384611.fastq",       input_format = "FASTQ",       output_file = "C:/Users/Magda/Downloads/aligned_sample.BAM")`
+
+Wykorzystane biblioteki: `library(GenomicAlignments)`
+
+# aligned_sample.BAM
+
+#Total_reads 1643674 #Mapped_reads 1278221 #Uniquely_mapped_reads 1257418 #Multi_mapping_reads 20803 #Unmapped_reads 365453 #Indels 1862
+
+# % sekwencji zmapowanych - 77.8%
+
+# % sekwencji niezmapowanych - 22.2%
+
+#Odczyty niezmapowane mogą wynikać z różnic osobniczych, niekompletnego lub złego jakościowo sekwencjonowania badanej sekwencji
+
+**Zadanie 5:** Kod: `aln \<- readGAlignments("C:/Users/USER/Desktop/bioinformatyka/aligned_sample.BAM")`, `coverage_data \<- coverage(aln)`, `cov_df \<- as.data.frame(coverage_data[[1]])`, `cov_df\$position \<- as.numeric(rownames(cov_df))`
+
+plik pdf był nie działał, więc format na jpg jpeg - `(cov_df, output_file = "C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/plik.jpeg", width = 8, height = 6)`
+
+`ggplot(cov_df[1:25000, ], aes(x = position, y = value)) + geom_line(color = "blue") + labs(title = "Pokrycie genomu E. coli", x = "Pozycja w genomie", y = "Liczba zmapowanych odczytów")`
+
+`dev.off()`
+
+Wykres pokazuje peak w okolicy pozycji 20000
