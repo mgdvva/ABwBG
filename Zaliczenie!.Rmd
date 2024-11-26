@@ -1,0 +1,72 @@
+---
+title: "Zaliczenie"
+output: html_document
+date: "2024-11-24"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+#Załadowanie bibliotek:
+library(BiocManager)`,`library(ShortRead)`,`library(GenomicAlignments)\`,
+library(BioStrings), library(Rsubread), library(ggplot2)
+
+#Wczytanie pliku:
+`fastq_file <- "C:/Users/Magda/Downloads/ecoli_raw.fq"` #Długość
+sekwencji: length(ecoli_raw.fq)
+
+#Odczyt ilości par GC i wizualizacja na histogramie:
+`gc_content <- letterFrequency(sread(fq_reads), letters = "GC", as.prob = TRUE)`
+`hist(gc_content, breaks = 50, main = "Zawartość GC w oryginalnych odczytach", xlab = "Procent GC")`
+
+#Kontrola jakości - raport QC:
+`qa_results <- qa(fq_file, type = "fastq")`,
+`report(qa_results, dest = "C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/QA_Report")`
+
+#Trimming:
+`trimmed_reads1 <- trimTailw(ecoli_raw.fq, k = 2, a = "B", halfwidth = 1)`
+`length(trimmed_reads1)` `sum(width(trimmed_reads1) < width(fq_reads))`
+
+#Filtracja odczytów:
+`filtered_reads1 <- trimmed_reads1[width(trimmed_reads1) >= 50]` -
+przycięcie 50 nukleotydów `length(filtered_reads1)`
+`filtered_reads2 <- trimmed_reads1[width(trimmed_reads1) >= 50]`
+
+#Raport QC po modyfikacjach:
+`writeFastq(trimmed_reads1, "filtered_reads.fastq")`
+`qa_results2 <- qa("filtered_reads.fastq", type = "fastq")`
+`report(qa_results2, dest = "C:/Users/Magda/Downloads/QA_report_read1_processed")`
+
+#Histogramy porównujące rozkłady długości odczytów przed i po
+przycięciu:
+`hist(width(ecoli_raw.fq), breaks = 50, main = "Długość odczytów przed przycinaniem", xlab = "Długość (bp)")`
+`hist(width(filtered_reads.fastq), breaks = 50, main = "Długość odczytów po przycinaniu", xlab = "Długość (bp)")`
+
+#Definicja adapetrów: `adapter_seq <- DNAString("AGATCGGAAGAGC")`
+
+#Przycięcie adapterów:
+`trimmed_reads_adapt <- trimLRPatterns(Lpattern = adapter_seq, subject = filtered_reads)`
+
+#Sprawdzenie ile odczytów zostało zmodyfikowanych:
+`sum(width(filtered_reads) < width(trimmed_reads))`
+
+#Zapisanie pliku po usunięciu adapterów:
+`writeFastq(filtered_reads, "C:/Users/Magda/Downloads/ecoli_raw _final.fq")`
+
+#Generacja kolejnego raportu QC:
+`qa_results1_final <- qa("C:/Users/Magda/Downloads/ecoli_raw_final.fq", type = "fastq")`
+`report(qa_results1_final, dest = "C:/Users/Magda/Downloads/QA_report_read1_final")`
+
+#Indeksowanie genomu referencyjnego:
+`download.file("ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/005/845/GCA_000005845.2_ASM584v2/GCA_000005845.2_ASM584v2_genomic.fna.gz"`,
+`destfile = C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/ecoli_genome.fna.gz")`
+`ref_genome <- readDNAStringSet("C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit /ecoli_genome.fna.gz")`
+`buildindex(basename = "ecoli_index", reference = "C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/ecoli_genome.fna.gz")`
+
+#Mapowanie genomu referencyjnego z sekwencją już przefiltrowaną:
+`align(index = "ecoli_index", readfile1 = "filtered_reads.fastq", input_format = "FASTQ",   output_file = "C:/Users/Magda/Downloads/aligned_sample.BAM"`)
+
+#Analiza wizualna mapowania:
+`aln <- readGAlignments("C:/Users/Magda/Downloads/aligned_sample.BAM")`
+`coverage_data <- coverage(aln)`
+`jpeg("C:/Users/Magda/OneDrive - Szkoła Główna Gospodarstwa Wiejskiego/Pulpit/wyniki.jpg", width = 800, height = 600)   ggplot(cov_df[1:25000, ], aes(x = position, y = value)) +     geom_line(color = "blue") +     labs(title = "Pokrycie genomu E. coli",         x = "Pozycja w genomie",         y = "Liczba zmapowanych odczytów") dev.off()`
